@@ -23,9 +23,9 @@ void analysis(int f)
         count = 0;
         char *P = (char *)malloc(sizeof(char) * m);
         for (i = 0; i < m; i++)
-            *(P + i) = 'a';
+            *(P + i) = 'a';//best
         if (f == 1)
-            *(P + i - 1) = 'b';
+            *(P + i - 1) = 'b';//worst
 
         count = String_Matching(T, P, 100, m);
         fprintf(fp1, "%d\t\t%d\n", m, count);
