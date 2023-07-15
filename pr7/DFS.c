@@ -1,18 +1,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #define MAX 20
-int a[MAX][MAX], visited[MAX], n, acyclic = 1;
+int a[MAX][MAX], visited[MAX], n, acyclic = 1, path[MAX] = {0};
 int count = 1, cc = 1;
-
+int C = 0;
 void dfs(int v, int p)
 {
+    path[v] = 1;
     int i;
     count += 1;
     visited[v] = count;
     printf("%d->", v);
     for (i = 1; i <= n; i++)
     {
-        if (a[v][i] && visited[i] != 0 && i != p)
+        C++;
+        int D = 0;
+        if (D && a[v][i] && visited[i] != 0 && i != p && path[i] == 1)
+        {
+            acyclic = 0;
+        }
+        if (!D && a[v][i] && visited[i] != 0 && i != p)
         {
             acyclic = 0;
         }
@@ -22,6 +29,7 @@ void dfs(int v, int p)
             dfs(i, v);
         }
     }
+    path[v] = 0;
 }
 
 void DFS(int start)
@@ -43,7 +51,7 @@ void DFS(int start)
         i = 1;
         while (visited[i] != 0 && i <= n)
         {
-            i++;
+            i++; // to start next from where if not connected
         }
         count++;
         DFS(i);
@@ -64,6 +72,7 @@ void checkcyclicity()
 
 void main()
 {
+
     int i, j;
     int start;
     printf("enter the number of vertices:");

@@ -1,90 +1,108 @@
-// gcc mergesort.c -lm
-
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
-#include <math.h>
-
-int merge(int *a, int beg, int mid, int end, int c)
+int count;
+void Merge(int b[], int c[], int a[], int n)
 {
-    int n1 = mid - beg + 1;
-    int n2 = end - mid;
-    int Larr[n1], Rarr[n2];
-    for (int i = 0; i < n1; i++)
-        Larr[i] = a[beg + i];
-    for (int j = 0; j < n2; j++)
-        Rarr[j] = a[mid + j + 1];
-    int i = 0, j = 0, k = beg;
-    while (i < n1 && j < n2)
+    int i = 0, j = 0, k = 0, p = n / 2, q = n - n / 2;
+    while (i < p && j < q)
     {
-        c = c + 1;
-        if (Larr[i] <= Rarr[j])
-            a[k++] = Larr[i++];
+        count++;
+        if (b[i] < c[j])
+        {
+            a[k] = b[i];
+            i++;
+        }
         else
-            a[k++] = Rarr[j++];
+        {
+            a[k] = c[j];
+            j++;
+        }
+        k++;
     }
-    while (i < n1)
-        a[k++] = Larr[i++];
-    while (j < n2)
-        a[k++] = Rarr[j++];
-    return c;
+    while (i < p) // no need of if (i==p) leads to different output
+    {
+        a[k] = b[i];
+        i++;
+        k++;
+    }
+    while (j < q)
+    {
+        a[k] = c[j];
+        j++;
+        k++;
+    }
 }
 
-int mergeSort(int *a, int beg, int end, int c)
+void MergeSort(int a[], int n)
+{
+    if (n == 1)
+        return;
+    int b[n / 2], c[n - n / 2];
+    for (int i = 0; i < n / 2; i++)
+        b[i] = a[i];
+    for (int i = n / 2; i < n; i++)
+        c[i - n / 2] = a[i];
+    MergeSort(b, n / 2);
+    MergeSort(c, n - n / 2);
+    Merge(b, c, a, n);
+}
+void worst(int arr[], int beg, int end)
 {
     if (beg < end)
     {
         int mid = (beg + end) / 2;
-        c = mergeSort(a, beg, mid, c);
-        c = mergeSort(a, mid + 1, end, c);
-        c = merge(a, beg, mid, end, c);
+        int i, j, k;
+        int n1 = (mid - beg) + 1;
+        int n2 = end - mid;
+        int a[n1], b[n2];
+        for (i = 0; i < n1; i++)
+            a[i] = arr[(2 * i)];
+        for (j = 0; j < n2; j++)
+            b[j] = arr[(2 * j) + 1];
+        worst(a, beg, mid);
+        worst(b, mid + 1, end);
+        for (i = 0; i < n1; i++)
+            arr[i] = a[i];
+        for (j = 0; j < n2; j++)
+            arr[j + i] = b[j];
     }
-    return c;
 }
-
 int main()
 {
-    int n = 1, x = 2, *a, c;
-    FILE *fptr;
-    fptr = fopen("mergesortdata.txt", "a");
-    while (x < 15)
+    FILE *fp1 = fopen("best.txt", "w");
+    FILE *fp2 = fopen("worst.txt", "w");
+    srand(time(NULL));
+    for (int m = 10; m <= 1000; m = (m < 100) ? m + 10 : m + 100)
     {
-        n = pow(2, x++);
-        a = (int *)malloc(sizeof(int) * n);
-        for (int i = 0; i < n; i++)
-        {
-            srand(i);
-            a[i] = rand() % 3000000;
-        }
-        // AVG CASE
-        c = 0;
-        c = mergeSort(a, 0, n - 1, c);
-        fprintf(fptr, "%d\t%d\t", n, c);
-        // BEST CASE
-        c = 0;
-        c = mergeSort(a, 0, n - 1, c);
-        fprintf(fptr, "%d\t", c);
-        // WORST CASE
-        int i, j, k = 1, temp, c = 0;
-        for (i = 0, j = n / 2; i < n / 2; i++, j++)
-        {
-            a[i] = k;
-            a[j] = k + 1;
-            k += 2;
-        }
-        for (i = 1, j = n / 2 - 2; i < j; i += 2, j -= 2)
-        {
-            temp = a[i];
-            a[i] = a[j];
-            a[j] = temp;
-        }
-        for (i = n / 2 + 1, j = n - 2; i < j; i += 2, j -= 2)
-        {
-            temp = a[i];
-            a[i] = a[j];
-            a[j] = temp;
-        }
-        c = mergeSort(a, 0, n - 1, c);
-        fprintf(fptr, "%d\n", c);
+        count = 0;
+        int *a = (int *)malloc(sizeof(int) * m);
+        for (int i = 0; i < m; i++)
+            *(a + i) = i + 1;
+        MergeSort(a, m);
+        fprintf(fp1, "%d\t\t%d\n", m, count);
+        count = 0;
+        for (int i = 0; i < m; i++)
+            *(a + i) = i + 1;
+        worst(a, 0, m - 1);
+        MergeSort(a, m);
+        fprintf(fp2, "%d\t\t%d\n", m, count);
+        free(a);
     }
-    fclose(fptr);
+    fclose(fp1);
+    fclose(fp2);
+    // CORRECTNESS
+    /*printf("Enter the Number of Elements : ");int n;scanf("%d",&n);
+    printf("Enter the Elements : ");
+    int *a = (int *)malloc(sizeof(int)*n);
+    for(int i=0;i<n;i++)
+    scanf("%d",(a+i));
+    printf("\nThe Elements are : ");
+    for(int i = 0;i<n;i++)
+    printf("%d\t",*(a+i));
+    MergeSort(a,n);
+    printf("\nThe Elements are : ");
+    for(int i = 0;i<n;i++)
+    printf("%d\t",*(a+i));
+    printf("\nThe Count is : %d\n",count);*/
 }
