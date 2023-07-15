@@ -46,7 +46,7 @@ int memory_function(i, j)
     }
     return v[i][j];
 }
-void knapsack(itm *Head)
+void knapsack()
 {
     int rc = max, c[n], j = 0;
     for (int i = 0; i < n + 1; i++)
@@ -84,6 +84,6 @@ void knapsack(itm *Head)
 }
 void main()
 {
-    getdata(Head);
-    knapsack(Head);
+    getdata();
+    knapsack();
 }
