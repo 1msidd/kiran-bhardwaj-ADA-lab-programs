@@ -12,8 +12,7 @@ int main()
 void analyser()
 {
     int key, size, *search_array, index, o;
-    clock_t st, et;
-    double t, t1;
+   
     srand(time(NULL));
     FILE *fp2;
 
