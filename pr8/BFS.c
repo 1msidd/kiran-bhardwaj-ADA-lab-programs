@@ -1,101 +1,86 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-int vis[10], cnt = 0, cyc = 0, con = 0;
-
-typedef struct queue
+int graph[50][50], visited[50], path[50], isCyclic, d, path[50];
+int count, bfscall;
+void bfs(int n, int start)
 {
-    int A[15], f, r;
-} q;
+    int queue[n], parent[n], parentnode, r = -1, f = -1;
+    visited[start] = 1;
+    queue[++r] = start;
+    path[start] = 1;
+    parent[r] = -1;
 
-int isEmpty(q *qp)
-{
-    if (qp->f == -1 && qp->r == -1)
-        return 1;
-    return 0;
-}
-
-void enq(q *qp, int data)
-{
-    printf("-->%c", data + 65);
-    if (isEmpty(qp))
-        qp->f = 0;
-    qp->A[++qp->r] = data;
-}
-
-void deq(q *qp)
-{
-    qp->f++;
-    if (qp->f > qp->r)
-        qp->f = qp->r = -1;
-}
-
-void bfs(int n, int a[n][n], int v, int p, q *qp)
-{
-    cnt = cnt + 1;
-    vis[v] = cnt;
-    enq(qp, v);
-    while (!isEmpty(qp))
+    count++;
+    while (r != f)
     {
-        for (int w = 0; w < n; w++)
+        start = queue[++f];
+        parentnode = parent[f];
+        printf("%c---->", start + 65);
+        for (int i = 0; i < n; i++)
         {
-            if (a[qp->A[qp->f]][w] == 1)
+            if (d == 1)
             {
-                if (vis[w] != 0 && w != p)
-                {
-                    cyc = 1;
-                }
-                else
-                {
-                    cnt = cnt + 1;
-                    vis[w] = cnt;
-                    enq(qp, w);
-                }
+                if (i != parentnode && visited[i] && graph[start][i] && path[i])
+                    isCyclic = 1;
+            }
+            else
+            {
+                if (i != parentnode && visited[i] && graph[start][i])
+                    isCyclic = 1;
+            }
+            if (visited[i] == 0 && graph[start][i])
+            {
+                queue[++r] = i;
+                parent[r] = start; // NOT parent node;
+                visited[i] = 1;
+                count++;
             }
         }
-        deq(qp);
     }
+    path[start] = 0;
 }
-
-void BFS(int n, int a[n][n], q *qp)
+void main()
 {
-    for (int v = 0; v < n; v++)
-        vis[v] = 0;
-    bfs(n, a, 0, -1, qp);
-    if (cnt != n)
-    {
-        for (int v = 1; v < n; v++)
-            if (vis[v] == 0)
-            {
-                con = 1;
-                printf("\n");
-                bfs(n, a, v, -1, qp);
-            }
-        printf("\nGraph is disconnected and the above are the connected components\n");
-    }
-    if (con == 0)
-        printf("\nGraph is connected\n");
-}
-
-int main()
-{
-    int n, j, i, cnt = 0;
-    q *qp = malloc(sizeof(q));
-    qp->f = qp->r = -1;
-    printf("Enter the number of vertices:\n");
+    // Generate Dense and Simply Connected Graph and append to file in a+ mode for different vertices
+    // CORRECTNESS
+    int n;
+    printf("Enter the Number of Vertices : ");
     scanf("%d", &n);
-    int a[n][n];
-    printf("Enter the adjacency matrix\n");
-    for (i = 0; i < n; i++)
-        for (j = 0; j < n; j++)
-            scanf("%d", &a[i][j]);
-    BFS(n, a, qp);
-    printf("The BFS order of traversal is\n");
+    printf("Enter 1 if Graph is Directed Else 0 : ");
+    scanf("%d", &d);
+    printf("Enter the Adjacency Matrix\n");
     for (int i = 0; i < n; i++)
-        printf("-->%c", vis[i] + 64);
-    printf("\n");
-    if (cyc == 1)
-        printf("Cycle exists\n");
+    {
+        for (int j = 0; j < n; j++)
+        {
+            scanf("%d", &graph[i][j]);
+        }
+        visited[i] = 0;
+        path[i] = 0;
+    }
+    isCyclic = 0;
+    bfs(n, 0);
+    bfscall++;
+    if (isCyclic)
+        printf("\nGraph is Cyclic\n");
     else
-        printf("Cycle does not exist\n");
+        printf("\nGraph is Acyclic\n");
+    if (count == n)
+        printf("Graph is Connected\n");
+    else
+    {
+        printf("Graph is NOT Connected\n");
+        int start = 1;
+        while (count != n)
+        {
+            if (visited[start] == 0)
+            {
+                printf("\n");
+                bfs(n, start);
+                bfscall++;
+            }
+            start++;
+        }
+    }
+    printf("Number Of Connected Componenets is %d\n", bfscall);
 }
