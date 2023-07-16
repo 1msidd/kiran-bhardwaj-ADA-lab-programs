@@ -36,7 +36,7 @@ void analyser(int p)
 int bubble_sort(int *a, int size, int p)
 {
     int count = 0, i, j, temp, flag = 0;
-    for (i = 0; i < size; i++)
+    for (i = 0; i < size-1; i++)
     {
         flag = 0;
         for (j = 0; j < size - i - 1; j++)
