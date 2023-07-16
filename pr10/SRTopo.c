@@ -62,7 +62,7 @@ void topo()
     {
         printf("\nThe topological sorting is\n");
         for (int i = 0; i < n; i++)
-            printf("%d\t", s[i] + 1);
+            printf("%d\t", t[i] + 1);
     }
 }
 void main()
