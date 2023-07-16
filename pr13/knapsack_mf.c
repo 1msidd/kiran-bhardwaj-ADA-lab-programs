@@ -53,7 +53,12 @@ void knapsack()
     {
         for (j = 0; j < max + 1; j++)
         {
+
             v[i][j] = -1;
+            if (i == 0 || j == 0)
+            {
+                v[i][j] = 0;
+            }
         }
     }
     memory_function(n, max);
