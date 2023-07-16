@@ -26,7 +26,7 @@ void analyser()
         {
             *(search_array + i) = rand() % size;
         }
-        = selection_sort(search_array, size);
+        o = selection_sort(search_array, size);
         printf("%d\n", o);
         fprintf(fp2, "%d\t%d\n", size, o);
         free(search_array);
