@@ -13,8 +13,9 @@ void bfs(int n, int start)
     count++;
     while (r != f)
     {
-        path[start] = 1;
         start = queue[++f];
+        
+        path[start] = 1;
         parentnode = parent[f];
         printf("%c---->", start + 65);
         for (int i = 0; i < n; i++)
