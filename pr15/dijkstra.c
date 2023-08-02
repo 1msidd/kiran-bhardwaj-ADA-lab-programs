@@ -75,7 +75,7 @@ ver deleteheap(ver heap[])
     ver min = heap[0];
     heap[0] = heap[heapsize - 1];
     heapsize = heapsize - 1;
-    heapify(heap, heapsize, 0);
+    //heapify(heap, heapsize, 0);
     return min;
 }
 void dijkstra()
@@ -112,10 +112,11 @@ void dijkstra()
                         }
                     }
                     // to sort after editing
-                    heapSort(heap, heapsize);
+                   // heapSort(heap, heapsize);
                 }
             }
         }
+    heapSort(heap, heapsize); // to sort after editing
     }
 }
 void main()
