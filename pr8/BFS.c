@@ -7,12 +7,13 @@ void bfs(int n, int start)
     int queue[n], parent[n], parentnode, r = -1, f = -1;
     visited[start] = 1;
     queue[++r] = start;
-    path[start] = 1;
+    
     parent[r] = -1;
 
     count++;
     while (r != f)
     {
+        path[start] = 1;
         start = queue[++f];
         parentnode = parent[f];
         printf("%c---->", start + 65);
@@ -36,8 +37,9 @@ void bfs(int n, int start)
                 count++;
             }
         }
+        path[start] = 0;
     }
-    path[start] = 0;
+    
 }
 void main()
 {
