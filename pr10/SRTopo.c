@@ -2,7 +2,7 @@
 #include <stdlib.h>
 // LEgend
 int a[100][100];
-int in[100], v[100], s[100], t[100]; //
+int in[100], v[100], s[100], t[100]; //s is the temporary queue with elements with no source , t is the topological queue
 int f = 0, r = -1;                   //
 int n, scount = 0;
 computeindegree()
